@@ -17,6 +17,9 @@ public class App {
 
             String cmd = s.nextLine();
 
+            // URL에서 queryString 분리 후 저장하는 클래스
+            Rq rq = new Rq(cmd);
+
             if (cmd.equals("종료")) {
                 break;
             } else if (cmd.equals("등록")) {
@@ -124,7 +127,6 @@ public class App {
         // id=2&archive=true 저장
         List<String> paramNames = new ArrayList<>();
         List<String> paramValues = new ArrayList<>();
-        int id = 0; // queryString의 id값 정수형
 
         try { // '삭제?' 입력이 들어올 경우
             // queryString에서 id 추출하기
