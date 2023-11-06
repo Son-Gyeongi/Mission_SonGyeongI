@@ -38,6 +38,12 @@ public class App {
             } else if (cmd.equals("목록")) {
                 System.out.println("번호 / 작가 / 명언");
                 System.out.println("----------------------");
+
+                // quotations 리스트에서 모두 출력
+                for (int i = quotations.size() - 1; i >= 0; i--) {
+                    Quotation quotation = quotations.get(i);
+                    System.out.printf("%d / %s / %s\n", quotation.id, quotation.authorName, quotation.quotation);
+                }
             }
         }
     }
