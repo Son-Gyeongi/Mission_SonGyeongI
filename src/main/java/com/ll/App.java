@@ -24,11 +24,7 @@ public class App {
             } else if (cmd.equals("목록")) {
                 actionList();
             } else if (cmd.startsWith("삭제?")) {
-                // queryString에서 id 추출하기
-                int id = getParamAsInt(cmd, "id", 0);
-
-                // 삭제 로직
-                actionDelete(id);
+                actionDelete(cmd);
             }
         }
     }
@@ -65,18 +61,27 @@ public class App {
     }
 
     // 명언 삭제
-    void actionDelete(int id) {
+    void actionDelete(String cmd) {
+        // queryString에서 id 추출하기
+        int id = getParamAsInt(cmd, "id", 0);
+
+        if (id == 0) {
+            System.out.println("id를 정확히 입력해주세요.");
+            return;
+        }
+
         // id값을 확인하고 인덱스 확인 후 삭제
         for (int i = 0; i < quotations.size(); i++) {
             Quotation quotation = quotations.get(i);
 
             if (quotation.id == id) {
                 quotations.remove(i); // 리스트에서 명언 삭제
+                System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
                 break;
             }
         }
 
-        System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
+        System.out.printf("%d번 명언은 존재하지 않습니다.\n", id);
     }
 
     // param에서 id 추출
@@ -86,21 +91,30 @@ public class App {
         List<String> paramValues = new ArrayList<>();
         int id = 0; // queryString의 id값 정수형
 
-        // queryString에서 id 추출하기
-        // 예시 :  cmd == 삭제?id=2&archive=true
-        String[] cmdBits = cmd.split("\\?", 2);
+        try { // '삭제?' 입력이 들어올 경우
+            // queryString에서 id 추출하기
+            // 예시 :  cmd == 삭제?id=2&archive=true
+            String[] cmdBits = cmd.split("\\?", 2);
 //                String action = cmdBits[0]; // 삭제
-        String queryString = cmdBits[1]; // id=2&archive=true
+            String queryString = cmdBits[1]; // id=2&archive=true
 
-        String[] queryStringBits = queryString.split("&");
+            // 삭제만 들어왔을 경우
+            if (cmdBits.length == 1) {
+                return defaultValue;
+            }
 
-        for (int i = 0; i < queryStringBits.length; i++) {
-            String[] queryStrParamBits = queryStringBits[i].split("=", 2);
-            String _paramName = queryStrParamBits[0];
-            String paramValue = queryStrParamBits[1];
+            String[] queryStringBits = queryString.split("&");
 
-            paramNames.add(_paramName);
-            paramValues.add(paramValue);
+            for (int i = 0; i < queryStringBits.length; i++) {
+                String[] queryStrParamBits = queryStringBits[i].split("=", 2);
+                String _paramName = queryStrParamBits[0];
+                String paramValue = queryStrParamBits[1];
+
+                paramNames.add(_paramName);
+                paramValues.add(paramValue);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return defaultValue;
         }
 
         for (int i = 0; i < paramNames.size(); i++) {
