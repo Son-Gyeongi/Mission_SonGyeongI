@@ -20,16 +20,21 @@ public class App {
             // URL에서 queryString 분리 후 저장하는 클래스
             Rq rq = new Rq(cmd);
 
-            if (cmd.equals("종료")) {
-                break;
-            } else if (cmd.equals("등록")) {
-                actionSave();
-            } else if (cmd.equals("목록")) {
-                actionList();
-            } else if (cmd.startsWith("삭제?")) {
-                actionDelete(cmd);
-            } else if (cmd.startsWith("수정?")) {
-                actionModify(cmd);
+            switch (rq.getAction()) {
+                case "종료":
+                    return; // 함수 종료
+                case "등록":
+                    actionSave();
+                    break;
+                case "목록":
+                    actionList();
+                    break;
+                case "삭제":
+                    actionDelete(rq);
+                    break;
+                case "수정":
+                    actionModify(rq);
+                    break;
             }
         }
     }
@@ -66,9 +71,9 @@ public class App {
     }
 
     // 명언 삭제
-    void actionDelete(String cmd) {
+    void actionDelete(Rq rq) {
         // queryString에서 id 추출하기
-        int id = getParamAsInt(cmd, "id", 0);
+        int id = rq.getParamAsInt("id", 0);
 
         if (id == 0) {
             System.out.println("id를 정확히 입력해주세요.");
@@ -89,9 +94,9 @@ public class App {
         System.out.printf("%d번 명언은 존재하지 않습니다.\n", id);
     }
 
-    void actionModify(String cmd) {
+    void actionModify(Rq rq) {
         // queryString에서 id 추출하기
-        int id = getParamAsInt(cmd, "id", 0);
+        int id = rq.getParamAsInt("id", 0);
 
         if (id == 0) {
             System.out.println("id를 정확히 입력해주세요.");
@@ -120,50 +125,5 @@ public class App {
         }
 
         System.out.printf("%d번 명언은 존재하지 않습니다.\n", id);
-    }
-
-    // param에서 id 추출
-    int getParamAsInt(String cmd, String paramName, int defaultValue) {
-        // id=2&archive=true 저장
-        List<String> paramNames = new ArrayList<>();
-        List<String> paramValues = new ArrayList<>();
-
-        try { // '삭제?' 입력이 들어올 경우
-            // queryString에서 id 추출하기
-            // 예시 :  cmd == 삭제?id=2&archive=true
-            String[] cmdBits = cmd.split("\\?", 2);
-//                String action = cmdBits[0]; // 삭제
-            String queryString = cmdBits[1]; // id=2&archive=true
-
-            // 삭제만 들어왔을 경우
-            if (cmdBits.length == 1) {
-                return defaultValue;
-            }
-
-            String[] queryStringBits = queryString.split("&");
-
-            for (int i = 0; i < queryStringBits.length; i++) {
-                String[] queryStrParamBits = queryStringBits[i].split("=", 2);
-                String _paramName = queryStrParamBits[0];
-                String paramValue = queryStrParamBits[1];
-
-                paramNames.add(_paramName);
-                paramValues.add(paramValue);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return defaultValue;
-        }
-
-        for (int i = 0; i < paramNames.size(); i++) {
-            try {
-                // paramNames에서 "id" 찾기
-                if (paramNames.get(i).equals(paramName)) {
-                    return Integer.parseInt(paramValues.get(i)); // // queryString의 id값
-                }
-            } catch (NumberFormatException e) {
-            }
-        }
-
-        return defaultValue;
     }
 }
