@@ -24,39 +24,11 @@ public class App {
             } else if (cmd.equals("목록")) {
                 actionList();
             } else if (cmd.startsWith("삭제?")) {
-                // id=2&archive=true 저장
-                List<String> paramNames = new ArrayList<>();
-                List<String> paramValues = new ArrayList<>();
-                int id = 0; // queryString의 id값 정수형
-
                 // queryString에서 id 추출하기
-                // 예시 :  cmd == 삭제?id=2&archive=true
-                String[] cmdBits = cmd.split("\\?", 2);
-//                String action = cmdBits[0]; // 삭제
-                String queryString = cmdBits[1]; // id=2&archive=true
-
-                String[] queryStringBits = queryString.split("&");
-
-                for (int i = 0; i < queryStringBits.length; i++) {
-                    String[] queryStrParamBits = queryStringBits[i].split("=", 2);
-                    String paramName = queryStrParamBits[0];
-                    String paramValue = queryStrParamBits[1];
-
-                    paramNames.add(paramName);
-                    paramValues.add(paramValue);
-                }
-
-                for (int i = 0; i < paramNames.size(); i++) {
-                    // paramNames에서 "id" 찾기
-                    if (paramNames.get(i).equals("id")) {
-                        String paramValue = paramValues.get(i); // queryString의 id값
-                        id = Integer.parseInt(paramValue);
-                        break;
-                    }
-                }
+                int id = getParamAsInt(cmd, "id", 0);
 
                 // 삭제 로직
-                // id값을 확인하고 인덱스 가져오기
+                // id값을 확인하고 인덱스 확인 후 삭제
                 for (int i = 0; i < quotations.size(); i++) {
                     Quotation quotation = quotations.get(i);
 
@@ -100,5 +72,41 @@ public class App {
             Quotation quotation = quotations.get(i);
             System.out.printf("%d / %s / %s\n", quotation.id, quotation.authorName, quotation.quotation);
         }
+    }
+
+    int getParamAsInt(String cmd, String paramName, int defaultValue) {
+        // id=2&archive=true 저장
+        List<String> paramNames = new ArrayList<>();
+        List<String> paramValues = new ArrayList<>();
+        int id = 0; // queryString의 id값 정수형
+
+        // queryString에서 id 추출하기
+        // 예시 :  cmd == 삭제?id=2&archive=true
+        String[] cmdBits = cmd.split("\\?", 2);
+//                String action = cmdBits[0]; // 삭제
+        String queryString = cmdBits[1]; // id=2&archive=true
+
+        String[] queryStringBits = queryString.split("&");
+
+        for (int i = 0; i < queryStringBits.length; i++) {
+            String[] queryStrParamBits = queryStringBits[i].split("=", 2);
+            String _paramName = queryStrParamBits[0];
+            String paramValue = queryStrParamBits[1];
+
+            paramNames.add(_paramName);
+            paramValues.add(paramValue);
+        }
+
+        for (int i = 0; i < paramNames.size(); i++) {
+            try {
+                // paramNames에서 "id" 찾기
+                if (paramNames.get(i).equals(paramName)) {
+                    return Integer.parseInt(paramValues.get(i)); // // queryString의 id값
+                }
+            } catch (NumberFormatException e) {
+            }
+        }
+
+        return defaultValue;
     }
 }
