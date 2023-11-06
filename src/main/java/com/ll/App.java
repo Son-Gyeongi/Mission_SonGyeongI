@@ -23,6 +23,39 @@ public class App {
                 actionSave();
             } else if (cmd.equals("목록")) {
                 actionList();
+            } else if (cmd.startsWith("삭제?")) {
+                // id=2&archive=true 저장
+                List<String> paramNames = new ArrayList<>();
+                List<String> paramValues = new ArrayList<>();
+                int id = 0; // queryString의 id값 정수형
+
+                // queryString에서 id 추출하기
+                // 예시 :  cmd == 삭제?id=2&archive=true
+                String[] cmdBits = cmd.split("\\?", 2);
+//                String action = cmdBits[0]; // 삭제
+                String queryString = cmdBits[1]; // id=2&archive=true
+
+                String[] queryStringBits = queryString.split("&");
+
+                for (int i = 0; i < queryStringBits.length; i++) {
+                    String[] queryStrParamBits = queryStringBits[i].split("=", 2);
+                    String paramName = queryStrParamBits[0];
+                    String paramValue = queryStrParamBits[1];
+
+                    paramNames.add(paramName);
+                    paramValues.add(paramValue);
+                }
+
+                for (int i = 0; i < paramNames.size(); i++) {
+                    // paramNames에서 "id" 찾기
+                    if (paramNames.get(i).equals("id")) {
+                        String paramValue = paramValues.get(i); // queryString의 id값
+                        id = Integer.parseInt(paramValue);
+                        break;
+                    }
+                }
+
+                System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
             }
         }
     }
