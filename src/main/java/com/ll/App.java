@@ -28,17 +28,7 @@ public class App {
                 int id = getParamAsInt(cmd, "id", 0);
 
                 // 삭제 로직
-                // id값을 확인하고 인덱스 확인 후 삭제
-                for (int i = 0; i < quotations.size(); i++) {
-                    Quotation quotation = quotations.get(i);
-
-                    if (quotation.id == id) {
-                        quotations.remove(i); // 리스트에서 명언 삭제
-                        break;
-                    }
-                }
-
-                System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
+                actionDelete(id);
             }
         }
     }
@@ -74,6 +64,22 @@ public class App {
         }
     }
 
+    // 명언 삭제
+    void actionDelete(int id) {
+        // id값을 확인하고 인덱스 확인 후 삭제
+        for (int i = 0; i < quotations.size(); i++) {
+            Quotation quotation = quotations.get(i);
+
+            if (quotation.id == id) {
+                quotations.remove(i); // 리스트에서 명언 삭제
+                break;
+            }
+        }
+
+        System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
+    }
+
+    // param에서 id 추출
     int getParamAsInt(String cmd, String paramName, int defaultValue) {
         // id=2&archive=true 저장
         List<String> paramNames = new ArrayList<>();
