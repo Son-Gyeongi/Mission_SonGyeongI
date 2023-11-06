@@ -55,6 +55,17 @@ public class App {
                     }
                 }
 
+                // 삭제 로직
+                // id값을 확인하고 인덱스 가져오기
+                for (int i = 0; i < quotations.size(); i++) {
+                    Quotation quotation = quotations.get(i);
+
+                    if (quotation.id == id) {
+                        quotations.remove(i); // 리스트에서 명언 삭제
+                        break;
+                    }
+                }
+
                 System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
             }
         }
