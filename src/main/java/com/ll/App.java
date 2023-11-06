@@ -25,6 +25,8 @@ public class App {
                 actionList();
             } else if (cmd.startsWith("삭제?")) {
                 actionDelete(cmd);
+            } else if (cmd.startsWith("수정?")) {
+                actionModify(cmd);
             }
         }
     }
@@ -77,7 +79,40 @@ public class App {
             if (quotation.id == id) {
                 quotations.remove(i); // 리스트에서 명언 삭제
                 System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
-                break;
+                return;
+            }
+        }
+
+        System.out.printf("%d번 명언은 존재하지 않습니다.\n", id);
+    }
+
+    void actionModify(String cmd) {
+        // queryString에서 id 추출하기
+        int id = getParamAsInt(cmd, "id", 0);
+
+        if (id == 0) {
+            System.out.println("id를 정확히 입력해주세요.");
+            return;
+        }
+
+        // id값을 확인하고 인덱스 확인 후 삭제
+        for (int i = 0; i < quotations.size(); i++) {
+            Quotation quotation = quotations.get(i);
+
+            if (quotation.id == id) {
+                System.out.println("명언(기존) : " + quotation.quotation);
+                System.out.print("명언 : ");
+                String content = s.nextLine();
+
+                System.out.println("작가(기존) : " + quotation.authorName);
+                System.out.print("작가 : ");
+                String authorName = s.nextLine();
+
+                quotation.quotation = content;
+                quotation.authorName = authorName;
+
+                System.out.printf("%d번 명언이 수정되었습니다.\n", id);
+                return;
             }
         }
 
