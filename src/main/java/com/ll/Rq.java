@@ -15,6 +15,11 @@ public class Rq {
         // 예시 :  cmd == 삭제?id=2&archive=true
         String[] cmdBits = cmd.split("\\?", 2);
         action = cmdBits[0].trim(); // 삭제
+
+        if (cmdBits.length == 1) {
+            return;
+        }
+
         queryString = cmdBits[1].trim(); // id=2&archive=true
 
         String[] queryStringBits = queryString.split("&");
@@ -23,10 +28,10 @@ public class Rq {
             String queryParamStr = queryStringBits[i];
             String[] queryParamStrBits = queryParamStr.split("=", 2);
 
-            String paramname = queryParamStrBits[0];
+            String paramName = queryParamStrBits[0];
             String paramValue = queryParamStrBits[1];
 
-            paramMap.put(paramname, paramValue);
+            paramMap.put(paramName, paramValue);
         }
     }
 
