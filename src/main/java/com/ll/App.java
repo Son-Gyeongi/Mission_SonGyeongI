@@ -66,7 +66,7 @@ public class App {
         // quotations 리스트에서 모두 출력
         for (int i = quotations.size() - 1; i >= 0; i--) {
             Quotation quotation = quotations.get(i);
-            System.out.printf("%d / %s / %s\n", quotation.id, quotation.authorName, quotation.quotation);
+            System.out.printf("%d / %s / %s\n", quotation, quotation.authorName, quotation.quotation);
         }
     }
 
