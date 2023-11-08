@@ -111,12 +111,33 @@ public class App {
             return;
         }
 
+        /*
         // id값을 확인하고 인덱스 확인 후 삭제
         for (int i = 0; i < quotations.size(); i++) {
             Quotation quotation = quotations.get(i);
 
             if (quotation.getId() == id) {
                 quotations.remove(i); // 리스트에서 명언 삭제
+                System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
+                return;
+            }
+        }
+         */
+
+        // 파일 불러와서 삭제하기
+        File folder = new File(filePath);
+        File[] files = folder.listFiles();
+
+        if (files != null) {
+            System.out.println("파일이 존재하지 않습니다.");
+            return;
+        }
+
+        for (File file : files) {
+            String[] fileNameBits = file.getName().split("\\.", 2);
+            int fileId = Integer.parseInt(fileNameBits[0]);
+            if (id == fileId) {
+                file.delete();
                 System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
                 return;
             }
