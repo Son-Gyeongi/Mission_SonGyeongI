@@ -1,5 +1,8 @@
 package com.ll;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +13,7 @@ public class App {
     private int lastQuotationId = 0; // 명언 번호
     private List<Quotation> quotations = new ArrayList<>(); // 명언 리스트
     private final static String filePath = "C:/techitStudy/mission/Mission_SonGyeongI/savedFile/"; // 파일 경로
+    private final static String filePathParent = "C:/techitStudy/mission/Mission_SonGyeongI/"; // 파일 경로
 
     public void run() {
         System.out.println("== 명언 앱 ==");
@@ -157,6 +161,22 @@ public class App {
     // 명언 데이터 빌드 / data.json 빌드
     private void actionBuild() {
 
+        // 파일에서 불러오기 - 데이터 객체 생성
+        List<Quotation> fileContents = readFiles();
+
+        // Gson 객체 생성
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        // JSON 형식으로 변환
+        String jsonData = gson.toJson(fileContents);
+
+        // 파일에 저장
+        try (FileWriter writer = new FileWriter(filePathParent + "data.json")) {
+            writer.write(jsonData);
+            System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // 파일 저장
