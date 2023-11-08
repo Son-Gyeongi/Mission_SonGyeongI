@@ -49,15 +49,23 @@ public class App {
         System.out.print("작가 : ");
         String authorName = s.nextLine();
 
+        /*
         lastQuotationId++;
         int id = lastQuotationId;
 
-        // Quotation 객체 생성
-        Quotation quotation = new Quotation(id, authorName, content);
-        /*
         // 리스트에 저장
         quotations.add(quotation);
          */
+
+        // 파일에서 불러오기
+        List<Quotation> fileContents = readFiles();
+        // 제일 최상위 id 불러오기
+        lastQuotationId = fileContents.get(fileContents.size() - 1).getId();
+        int id = lastQuotationId +1;
+
+        // Quotation 객체 생성
+        Quotation quotation = new Quotation(id, authorName, content);
+
         // 파일에 저장
         savedFile(quotation);
 
@@ -78,10 +86,11 @@ public class App {
          */
 
         // 파일에서 불러오기
-        List<String> fileContents = readFiles();
+        List<Quotation> fileContents = readFiles();
 
         for (int i = fileContents.size() - 1; i >= 0; i--) {
-            System.out.print(fileContents.get(i));
+            Quotation quotation = fileContents.get(i);
+            System.out.printf("%d / %s / %s\n", quotation.getId(), quotation.getAuthorName(), quotation.getQuotation());
         }
     }
 
@@ -156,8 +165,8 @@ public class App {
     }
 
     // 파일들 불러오기
-    private List<String> readFiles() {
-        List<String> fileContents = new ArrayList<>();
+    private List<Quotation> readFiles() {
+        List<Quotation> fileContents = new ArrayList<>();
 
         File folder = new File(filePath);
         File[] files = folder.listFiles();
@@ -168,11 +177,17 @@ public class App {
                 if (file.isFile()) {
                     fileList.add(file.getName());
 
-                    // 파일 내용 출력
+                    // 파일 제목에서 id 뽑아내기 / 1.txt
                     String[] fileNameBits = file.getName().split("\\.", 2);
-                    String id = fileNameBits[0];
+                    int id = Integer.parseInt(fileNameBits[0]);
 
-                    String quotation = id + " / " + readContentFromFile(file);
+                    // 파일 내용 출력
+                    String fileContent = readContentFromFile(file);
+                    String[] contentBits = fileContent.split("/", 2);
+                    String authorName = contentBits[0].trim();
+                    String content = contentBits[1].trim();
+
+                    Quotation quotation = new Quotation(id, authorName, content);
                     fileContents.add(quotation);
                 }
             }
