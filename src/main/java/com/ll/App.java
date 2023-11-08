@@ -1,5 +1,7 @@
 package com.ll;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -8,6 +10,7 @@ public class App {
     private Scanner s = new Scanner(System.in);
     private int lastQuotationId = 0; // 명언 번호
     private List<Quotation> quotations = new ArrayList<>(); // 명언 리스트
+    private final static String filePath = "C:/techitStudy/mission/Mission_SonGyeongI/savedFile/"; // 파일 경로
 
     public void run() {
         System.out.println("== 명언 앱 ==");
@@ -52,8 +55,12 @@ public class App {
 
         // Quotation 객체 생성
         Quotation quotation = new Quotation(id, authorName, content);
+        /*
         // 리스트에 저장
         quotations.add(quotation);
+         */
+        // 파일에 저장
+        savedFile(quotation);
 
         System.out.printf("%d번 명언이 등록되었습니다.\n", id);
     }
@@ -125,5 +132,17 @@ public class App {
         }
 
         System.out.printf("%d번 명언은 존재하지 않습니다.\n", id);
+    }
+
+    private void savedFile(Quotation quotation) {
+        try {
+            FileWriter writer = new FileWriter(filePath + quotation.getId() + ".txt");
+            writer.write(" / " + quotation.getAuthorName() + " / " + quotation.getQuotation());
+            writer.close();
+            System.out.println("파일 저장 완료");
+        } catch (IOException e) {
+            System.out.println("파일 저장 실패");
+            e.printStackTrace();
+        }
     }
 }
