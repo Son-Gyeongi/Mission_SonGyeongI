@@ -1,7 +1,6 @@
 package com.ll;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -70,10 +69,19 @@ public class App {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
 
+        /*
         // quotations 리스트에서 모두 출력
         for (int i = quotations.size() - 1; i >= 0; i--) {
             Quotation quotation = quotations.get(i);
             System.out.printf("%d / %s / %s\n", quotation.getId(), quotation.getAuthorName(), quotation.getQuotation());
+        }
+         */
+
+        // 파일에서 불러오기
+        List<String> fileContents = readFiles();
+
+        for (int i = fileContents.size() - 1; i >= 0; i--) {
+            System.out.print(fileContents.get(i));
         }
     }
 
@@ -134,15 +142,56 @@ public class App {
         System.out.printf("%d번 명언은 존재하지 않습니다.\n", id);
     }
 
+    // 파일 저장
     private void savedFile(Quotation quotation) {
         try {
             FileWriter writer = new FileWriter(filePath + quotation.getId() + ".txt");
-            writer.write(" / " + quotation.getAuthorName() + " / " + quotation.getQuotation());
+            writer.write(quotation.getAuthorName() + " / " + quotation.getQuotation());
             writer.close();
             System.out.println("파일 저장 완료");
         } catch (IOException e) {
             System.out.println("파일 저장 실패");
             e.printStackTrace();
         }
+    }
+
+    // 파일들 불러오기
+    private List<String> readFiles() {
+        List<String> fileContents = new ArrayList<>();
+
+        File folder = new File(filePath);
+        File[] files = folder.listFiles();
+
+        List<String> fileList = new ArrayList<>();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    fileList.add(file.getName());
+
+                    // 파일 내용 출력
+                    String[] fileNameBits = file.getName().split("\\.", 2);
+                    String id = fileNameBits[0];
+
+                    String quotation = id + " / " + readContentFromFile(file);
+                    fileContents.add(quotation);
+                }
+            }
+        }
+
+        return fileContents;
+    }
+
+    // file 내용 불러오기
+    private static String readContentFromFile(File file) {
+        StringBuilder contentBuilder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                contentBuilder.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return contentBuilder.toString();
     }
 }
