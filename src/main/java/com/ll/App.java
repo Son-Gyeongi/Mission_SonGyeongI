@@ -128,11 +128,6 @@ public class App {
         File folder = new File(filePath);
         File[] files = folder.listFiles();
 
-        if (files != null) {
-            System.out.println("파일이 존재하지 않습니다.");
-            return;
-        }
-
         for (File file : files) {
             String[] fileNameBits = file.getName().split("\\.", 2);
             int fileId = Integer.parseInt(fileNameBits[0]);
@@ -155,6 +150,7 @@ public class App {
             return;
         }
 
+        /*
         // id값을 확인하고 인덱스 확인 후 삭제
         for (int i = 0; i < quotations.size(); i++) {
             Quotation quotation = quotations.get(i);
@@ -170,6 +166,35 @@ public class App {
 
                 quotation.setQuotation(content);
                 quotation.setAuthorName(authorName);
+
+                System.out.printf("%d번 명언이 수정되었습니다.\n", id);
+                return;
+            }
+        }
+         */
+
+        // 파일 불러와서 수정하기
+        List<Quotation> fileContents = readFiles();
+
+        for (Quotation file : fileContents) {
+            int fileId = file.getId();
+            if (id == fileId) {
+                System.out.println("명언(기존) : " + file.getQuotation());
+                System.out.print("명언 : ");
+                String content = s.nextLine();
+
+                System.out.println("작가(기존) : " + file.getAuthorName());
+                System.out.print("작가 : ");
+                String authorName = s.nextLine();
+
+                file.setQuotation(content);
+                file.setAuthorName(authorName);
+
+                // Quotation 객체 생성
+                Quotation quotation = new Quotation(id, authorName, content);
+
+                // 파일에 저장
+                savedFile(quotation);
 
                 System.out.printf("%d번 명언이 수정되었습니다.\n", id);
                 return;
@@ -257,5 +282,20 @@ public class App {
             e.printStackTrace();
         }
         return contentBuilder.toString();
+    }
+
+    // file 수정하기
+    private void fileModify(File file) {
+        // 파일 수정
+        try (BufferedReader reader = new BufferedReader(new FileReader(file));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+
+            // 파일 내용 읽기
+            StringBuilder contentBuilder = new StringBuilder();
+            String line;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
