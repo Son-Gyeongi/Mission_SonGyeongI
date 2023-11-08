@@ -37,6 +37,9 @@ public class App {
                 case "수정":
                     actionModify(rq);
                     break;
+                case "빌드":
+                    actionBuild();
+                    break;
             }
         }
     }
@@ -149,6 +152,11 @@ public class App {
         }
 
         System.out.printf("%d번 명언은 존재하지 않습니다.\n", id);
+    }
+
+    // 명언 데이터 빌드 / data.json 빌드
+    private void actionBuild() {
+
     }
 
     // 파일 저장
