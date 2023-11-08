@@ -1,15 +1,20 @@
 package com.ll;
 
+import lombok.Getter;
+
+import java.util.HashMap;
 import java.util.Map;
 
 // URL에서 queryString 분리 후 저장하는 클래스
 public class Rq {
-    String cmd; // 입력받는 값
-    String action; // 종료, 등록, 삭제, 수정
-    String queryString; // id=2&archive=true
-    Map<String, String> paramMap;
+    private String cmd; // 입력받는 값
+    @Getter
+    private String action; // 종료, 등록, 삭제, 수정
+    private String queryString; // id=2&archive=true
+    private Map<String, String> paramMap;
 
-    Rq(String cmd) {
+    public Rq(String cmd) {
+        paramMap = new HashMap<>();
         this.cmd = cmd;
 
         // 예시 :  cmd == 삭제?id=2&archive=true
@@ -33,10 +38,6 @@ public class Rq {
 
             paramMap.put(paramName, paramValue);
         }
-    }
-
-    String getAction() {
-        return action;
     }
 
     // "id"의 값 반환

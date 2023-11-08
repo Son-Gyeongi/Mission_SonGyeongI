@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class App {
-    Scanner s = new Scanner(System.in);
-    int lastQuotationId = 0; // 명언 번호
-    List<Quotation> quotations = new ArrayList<>(); // 명언 리스트
+    private Scanner s = new Scanner(System.in);
+    private int lastQuotationId = 0; // 명언 번호
+    private List<Quotation> quotations = new ArrayList<>(); // 명언 리스트
 
     public void run() {
         System.out.println("== 명언 앱 ==");
@@ -40,7 +40,7 @@ public class App {
     }
 
     // 명언 등록
-    void actionSave() {
+    private void actionSave() {
         System.out.print("명언 : ");
         String content = s.nextLine();
 
@@ -59,19 +59,19 @@ public class App {
     }
 
     // 명언 목록
-    void actionList() {
+    private void actionList() {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
 
         // quotations 리스트에서 모두 출력
         for (int i = quotations.size() - 1; i >= 0; i--) {
             Quotation quotation = quotations.get(i);
-            System.out.printf("%d / %s / %s\n", quotation, quotation.authorName, quotation.quotation);
+            System.out.printf("%d / %s / %s\n", quotation.getId(), quotation.getAuthorName(), quotation.getQuotation());
         }
     }
 
     // 명언 삭제
-    void actionDelete(Rq rq) {
+    private void actionDelete(Rq rq) {
         // queryString에서 id 추출하기
         int id = rq.getParamAsInt("id", 0);
 
@@ -84,7 +84,7 @@ public class App {
         for (int i = 0; i < quotations.size(); i++) {
             Quotation quotation = quotations.get(i);
 
-            if (quotation.id == id) {
+            if (quotation.getId() == id) {
                 quotations.remove(i); // 리스트에서 명언 삭제
                 System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
                 return;
@@ -94,7 +94,7 @@ public class App {
         System.out.printf("%d번 명언은 존재하지 않습니다.\n", id);
     }
 
-    void actionModify(Rq rq) {
+    private void actionModify(Rq rq) {
         // queryString에서 id 추출하기
         int id = rq.getParamAsInt("id", 0);
 
@@ -107,17 +107,17 @@ public class App {
         for (int i = 0; i < quotations.size(); i++) {
             Quotation quotation = quotations.get(i);
 
-            if (quotation.id == id) {
-                System.out.println("명언(기존) : " + quotation.quotation);
+            if (quotation.getId() == id) {
+                System.out.println("명언(기존) : " + quotation.getQuotation());
                 System.out.print("명언 : ");
                 String content = s.nextLine();
 
-                System.out.println("작가(기존) : " + quotation.authorName);
+                System.out.println("작가(기존) : " + quotation.getAuthorName());
                 System.out.print("작가 : ");
                 String authorName = s.nextLine();
 
-                quotation.quotation = content;
-                quotation.authorName = authorName;
+                quotation.setQuotation(content);
+                quotation.setAuthorName(authorName);
 
                 System.out.printf("%d번 명언이 수정되었습니다.\n", id);
                 return;
